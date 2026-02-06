@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A Special Question for Salma</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- HTML2Canvas for image generation -->
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+    <!-- Google Fonts for handwriting -->
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&family=Nunito:wght@400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
+            transition: background 1s ease;
+        }
+        .handwriting {
+            font-family: 'Dancing Script', cursive;
+        }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+        }
+        /* Custom scrollbar for cuteness */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #f9a8d4; 
+            border-radius: 4px;
+        }
+        
+        /* Animations */
+        @keyframes pop {
+            0% { transform: scale(0); opacity: 0; }
+            50% { transform: scale(1.2); opacity: 1; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .pop-in {
+            animation: pop 0.5s ease-out forwards;
+        }
+        .fade-in {
+            animation: fadeIn 1s ease-in forwards;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Heartbeat Animation for Yes Button */
+        @keyframes heartbeat {
+            0% { transform: scale(1); }
+            14% { transform: scale(1.1); }
+            28% { transform: scale(1); }
+            42% { transform: scale(1.1); }
+            70% { transform: scale(1); }
+        }
+        .heartbeat {
+            animation: heartbeat 2s infinite;
+        }
+
+        /* Rain Animation */
+        .rain-drop {
+            position: fixed;
+            top: -20px;
+            width: 2px;
+            height: 15px;
+            background: #8aa;
+            z-index: 50;
+        }
+    </style>
+</head>
+<!-- UPDATED: Changed overflow-hidden to overflow-auto to allow scrolling if content is too tall -->
+<body id="mainBody" class="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-pink-100 via-purple-100 to-blue-100 overflow-auto relative">
+
+    <!-- Background Decorative Elements -->
+    <div id="blob1" class="fixed top-0 left-0 w-64 h-64 bg-yellow-200 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob"></div>
+    <div id="blob2" class="fixed top-0 right-0 w-64 h-64 bg-pink-200 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-2000"></div>
+    <div id="blob3" class="fixed -bottom-8 left-20 w-64 h-64 bg-purple-200 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-4000"></div>
+
+    <!-- STAGE 1: LOCK SCREEN -->
+    <div id="lockScreen" class="glass-panel p-8 rounded-2xl max-w-md w-full text-center relative z-10 transition-all duration-500 my-auto">
+        <div class="mb-6">
+            <span class="text-5xl">🔒</span>
+        </div>
+        <h2 class="text-2xl font-bold text-gray-800 mb-2">Restricted Access</h2>
+        <p class="text-gray-500 mb-6">This document is intended for one specific person. Please identify yourself.</p>
+        
+        <input type="text" id="nameInput" placeholder="Enter your first name..." 
+            class="w-full px-4 py-3 rounded-lg border-2 border-purple-200 focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-200 transition-all mb-4 text-center text-lg">
+        
+        <button onclick="checkName()" class="w-full bg-gradient-to-r from-purple-500 to-pink-500 text-white font-bold py-3 px-6 rounded-lg shadow-lg transform transition hover:-translate-y-1 hover:shadow-xl active:translate-y-0">
+            Unlock Document
+        </button>
+        <p id="errorMsg" class="text-red-500 mt-4 hidden text-sm font-bold">Access Denied. You are not the chosen one! 😋</p>
+    </div>
+
+    <!-- STAGE 2: THE CONTRACT -->
+    <div id="contractScreen" class="hidden max-w-2xl w-full relative z-10 transition-all duration-500 py-10">
+        
+        <!-- The Printable Area -->
+        <div id="certificate" class="glass-panel p-8 md:p-12 rounded-xl relative overflow-hidden bg-white mx-auto">
+            
+            <!-- Decorative Header -->
+            <div class="text-center mb-8 border-b-2 border-dashed border-gray-300 pb-6">
+                <h1 class="font-bold text-3xl md:text-4xl bg-clip-text text-transparent bg-gradient-to-r from-pink-500 to-violet-500 mb-2">
+                    Official Relationship Agreement
+                </h1>
+                <p class="text-gray-400 text-sm tracking-widest uppercase">Contract No. <span id="dateDisplay"></span></p>
+            </div>
+
+            <!-- Contract Body -->
+            <div class="space-y-6 text-gray-700 leading-relaxed">
+                <p class="text-lg">
+                    This binding agreement is made between <span class="font-bold text-purple-600 text-xl">Khalil</span> (The Proposer) and <span class="font-bold text-pink-600 text-xl">Salma</span> (The Priority).
+                </p>
+
+                <div class="bg-pink-50 p-6 rounded-lg border border-pink-100">
+                    <h3 class="font-bold text-pink-500 mb-3 uppercase tracking-wide text-xs">Terms & Conditions</h3>
+                    <ul class="list-none space-y-3">
+                        <li class="flex items-start">
+                            <span class="mr-2 text-xl">🌈</span> 
+                            <span><strong>Article 1:</strong> Life shall be filled with colors, not just black and white.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="mr-2 text-xl">🍫</span> 
+                            <span><strong>Article 2:</strong> Khalil agrees to share snacks, even the really good ones.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="mr-2 text-xl">💖</span> 
+                            <span><strong>Article 3:</strong> Salma agrees to be the loveliest girlfriend in the world.</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <p class="text-center text-xl font-semibold italic text-gray-600 mt-8">
+                    "Salma, will you do me the honor of being my girlfriend?"
+                </p>
+            </div>
+
+            <!-- Signatures Section -->
+            <div class="mt-12 flex justify-between items-end px-4">
+                <div class="text-center">
+                    <div class="handwriting text-3xl text-blue-600 mb-2 transform -rotate-6">Khalil</div>
+                    <div class="border-t-2 border-gray-400 w-32 mx-auto"></div>
+                    <p class="text-xs text-gray-400 mt-1 uppercase">Signed by Khalil</p>
+                </div>
+
+                <!-- Approved Stamp (Hidden until signed) -->
+                <div id="stamp" class="hidden absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 border-4 border-red-500 rounded-full p-2 animate-bounce opacity-80 rotate-12 pointer-events-none">
+                    <div class="border-2 border-red-500 rounded-full px-6 py-2">
+                        <span class="text-red-500 font-black text-2xl uppercase tracking-widest">OFFICIAL</span>
+                    </div>
+                </div>
+
+                <div class="text-center relative">
+                    <!-- Salma's Signature Placeholder (ID kept as legacy but content updated) -->
+                    <div id="hanaeSignature" class="handwriting text-4xl text-pink-600 mb-2 transform -rotate-3 hidden pop-in">Salma</div>
+                    <!-- Empty space before signing -->
+                    <div id="signaturePlaceholder" class="h-10 mb-2 w-32"></div>
+                    
+                    <div class="border-t-2 border-gray-400 w-32 mx-auto"></div>
+                    <p class="text-xs text-gray-400 mt-1 uppercase">Signed by Salma</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <!-- Added z-50 to ensure they sit on top and margin-bottom for scrolling space -->
+        <div id="buttonContainer" class="mt-8 relative h-24 flex justify-center items-center gap-6 z-50 mb-10">
+            
+            <button onclick="handleAgree()" class="heartbeat bg-gradient-to-r from-green-400 to-green-600 hover:from-green-500 hover:to-green-700 text-white font-bold py-4 px-10 rounded-full shadow-lg transform transition hover:scale-105 flex items-center gap-2 text-lg cursor-pointer z-50">
+                <span>❤️</span> Yes, I Agree!
+            </button>
+
+            <!-- Disagree button with mouseover event for fleeing -->
+            <button id="noBtn" onmouseover="runAway(this)" onclick="confirmDisagree()" class="bg-gray-200 hover:bg-gray-300 text-gray-600 font-bold py-4 px-8 rounded-full shadow-md transition-all duration-200 flex items-center gap-2 cursor-pointer z-50">
+                <span>💔</span> Decline
+            </button>
+
+        </div>
+
+        <!-- Download & Notify Section (Hidden until decision) -->
+        <div id="postDecisionSection" class="hidden mt-8 text-center animate-pulse mb-10">
+            <p id="decisionMessage" class="text-purple-600 font-bold mb-4 text-lg">Processing decision...</p>
+            <button id="downloadBtn" onclick="downloadImage()" class="hidden bg-gradient-to-r from-blue-500 to-indigo-600 text-white font-bold py-3 px-6 rounded-lg shadow-xl flex items-center justify-center mx-auto gap-2 transform transition hover:-translate-y-1">
+                <span>📸</span> Save as Image Souvenir
+            </button>
+        </div>
+    </div>
+
+    <!-- REJECTION SCREEN (Hidden by default) -->
+    <div id="rejectionScreen" class="hidden glass-panel p-8 rounded-2xl max-w-md w-full text-center relative z-10 fade-in border-gray-400">
+        <span class="text-6xl mb-4 block">😢</span>
+        <h2 class="text-2xl font-bold text-gray-800 mb-2">Oh no...</h2>
+        <p class="text-gray-600">I respect your decision completely.<br>It's raining in my heart now.</p>
+    </div>
+
+    <script>
+        // --- CONFIGURATION ---
+        const YOUR_EMAIL = "khalilxdroid@gmail.com"; 
+        
+        // Variables for the "Run Away" button
+        let runCount = 0;
+        const maxRuns = 3; 
+
+        // Set today's date
+        const date = new Date();
+        document.getElementById('dateDisplay').textContent = date.toLocaleDateString();
+
+        function checkName() {
+            const input = document.getElementById('nameInput');
+            const error = document.getElementById('errorMsg');
+            const lockScreen = document.getElementById('lockScreen');
+            const contractScreen = document.getElementById('contractScreen');
+            
+            // Updated name check to Salma
+            if (input.value.trim().toLowerCase() === 'salma') {
+                lockScreen.style.transform = 'scale(0.9) opacity(0)';
+                setTimeout(() => {
+                    lockScreen.classList.add('hidden');
+                    contractScreen.classList.remove('hidden');
+                    contractScreen.classList.add('pop-in');
+                }, 500);
+            } else {
+                lockScreen.classList.add('animate-bounce');
+                setTimeout(() => lockScreen.classList.remove('animate-bounce'), 500);
+                error.classList.remove('hidden');
+                input.classList.add('border-red-500');
+            }
+        }
+
+        // The "Run Away" Logic
+        function runAway(btn) {
+            if (runCount < maxRuns) {
+                // Get viewport dimensions
+                const vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
+                const vh = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0);
+                
+                // Button dimensions
+                const btnW = btn.offsetWidth;
+                const btnH = btn.offsetHeight;
+
+                // Calculate random position within safe bounds
+                // We use fixed positioning to break out of layout flow
+                const maxX = vw - btnW - 40;
+                const maxY = vh - btnH - 40;
+                
+                const newX = Math.max(20, Math.random() * maxX);
+                const newY = Math.max(20, Math.random() * maxY);
+                
+                btn.style.position = 'fixed';
+                btn.style.left = newX + 'px';
+                btn.style.top = newY + 'px';
+                btn.style.zIndex = '9999'; // Ensure it stays on top
+                
+                runCount++;
+            }
+        }
+
+        function handleAgree() {
+            // UI Updates
+            const sig = document.getElementById('hanaeSignature');
+            const placeholder = document.getElementById('signaturePlaceholder');
+            const stamp = document.getElementById('stamp');
+            const buttonContainer = document.getElementById('buttonContainer');
+            const postSection = document.getElementById('postDecisionSection');
+            const downloadBtn = document.getElementById('downloadBtn');
+            const msg = document.getElementById('decisionMessage');
+
+            // Sign Logic
+            placeholder.classList.add('hidden');
+            sig.classList.remove('hidden');
+            stamp.classList.remove('hidden');
+            buttonContainer.classList.add('hidden'); // Hide the Yes/No buttons
+            postSection.classList.remove('hidden');
+            downloadBtn.classList.remove('hidden');
+            
+            msg.textContent = "Best choice ever! Notifying Khalil...";
+            
+            // Celebration
+            confettiEffect();
+
+            // Email Notification (Agree) - Updated for Salma
+            setTimeout(() => {
+                const subject = encodeURIComponent("I Said YES! ❤️");
+                const body = encodeURIComponent("Hey Khalil,\n\nI signed the contract! I agree to be your girlfriend.\n\nLove,\nSalma");
+                window.location.href = `mailto:${YOUR_EMAIL}?subject=${subject}&body=${body}`;
+            }, 1500);
+        }
+
+        function confirmDisagree() {
+            if (confirm("Are you really sure? 🥺")) {
+                handleDisagree();
+            }
+        }
+
+        function handleDisagree() {
+            const contractScreen = document.getElementById('contractScreen');
+            const rejectionScreen = document.getElementById('rejectionScreen');
+            const body = document.getElementById('mainBody');
+            const blobs = document.querySelectorAll('.animate-blob');
+
+            // Change background to sad gray
+            body.classList.remove('bg-gradient-to-br', 'from-pink-100', 'via-purple-100', 'to-blue-100');
+            body.style.backgroundColor = '#374151'; // dark gray
+
+            // Hide colorful blobs
+            blobs.forEach(blob => blob.style.display = 'none');
+
+            contractScreen.style.opacity = '0';
+            setTimeout(() => {
+                contractScreen.classList.add('hidden');
+                rejectionScreen.classList.remove('hidden');
+                startRain(); // Trigger rain animation
+            }, 500);
+
+            // Email Notification (Disagree) - Updated for Salma
+            setTimeout(() => {
+                const subject = encodeURIComponent("Regarding the contract... 💔");
+                const body = encodeURIComponent("Hey Khalil,\n\nI saw the contract. I'm sorry, but I have to decline for now.\n\nBest,\nSalma");
+                window.location.href = `mailto:${YOUR_EMAIL}?subject=${subject}&body=${body}`;
+            }, 2000);
+        }
+
+        function downloadImage() {
+            const element = document.getElementById("certificate");
+            html2canvas(element, {
+                scale: 2,
+                backgroundColor: null,
+                useCORS: true
+            }).then(canvas => {
+                const link = document.createElement('a');
+                link.download = 'Our_Agreement_Signed.png';
+                link.href = canvas.toDataURL("image/png");
+                link.click();
+            });
+        }
+
+        function confettiEffect() {
+            const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#ff69b4'];
+            for(let i=0; i<150; i++) {
+                const conf = document.createElement('div');
+                conf.style.position = 'fixed';
+                conf.style.left = '50%';
+                conf.style.top = '50%';
+                conf.style.width = Math.random() * 10 + 5 + 'px';
+                conf.style.height = Math.random() * 10 + 5 + 'px';
+                conf.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                conf.style.transition = 'all 1.5s ease-out';
+                conf.style.zIndex = '100';
+                conf.style.borderRadius = '50%';
+                document.body.appendChild(conf);
+
+                setTimeout(() => {
+                    const x = (Math.random() - 0.5) * window.innerWidth * 1.5;
+                    const y = (Math.random() - 0.5) * window.innerHeight * 1.5;
+                    conf.style.transform = `translate(${x}px, ${y}px) rotate(${Math.random()*720}deg)`;
+                    conf.style.opacity = '0';
+                }, 10);
+
+                setTimeout(() => conf.remove(), 1500);
+            }
+        }
+
+        function startRain() {
+            setInterval(() => {
+                const drop = document.createElement('div');
+                drop.classList.add('rain-drop');
+                drop.style.left = Math.random() * window.innerWidth + 'px';
+                drop.style.animationDuration = Math.random() * 0.5 + 0.5 + 's';
+                
+                document.body.appendChild(drop);
+                
+                // Animate drop falling
+                const animation = drop.animate([
+                    { top: '-20px', opacity: 1 },
+                    { top: window.innerHeight + 'px', opacity: 0.5 }
+                ], {
+                    duration: Math.random() * 1000 + 500,
+                    easing: 'linear'
+                });
+
+                animation.onfinish = () => drop.remove();
+            }, 50);
+        }
+        
+        document.getElementById("nameInput").addEventListener("keyup", function(event) {
+            if (event.key === "Enter") {
+                checkName();
+            }
+        });
+    </script>
+</body>
+</html>
