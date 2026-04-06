@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>A Special Question for Ihsane</title>
+    <title>A Special Question for Najoua</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- HTML2Canvas for image generation -->
@@ -119,7 +119,7 @@
             <!-- Contract Body -->
             <div class="space-y-6 text-gray-700 leading-relaxed">
                 <p class="text-lg">
-                    This romantic agreement is made between <span class="font-bold text-red-600 text-xl">Khalil</span> (The Admirer) and <span class="font-bold text-pink-600 text-xl">Ihsane</span> (The Valentine).
+                    This romantic agreement is made between <span class="font-bold text-red-600 text-xl">Khalil</span> (The Admirer) and <span class="font-bold text-pink-600 text-xl">Najoua</span> (The Valentine).
                 </p>
 
                 <div class="bg-red-50 p-6 rounded-lg border border-red-100">
@@ -127,7 +127,7 @@
                     <ul class="list-none space-y-3">
                         <li class="flex items-start">
                             <span class="mr-2 text-xl">🌹</span> 
-                            <span><strong>Article 1:</strong> Ihsane agrees to be Khalil's Valentine for the day (and hopefully longer).</span>
+                            <span><strong>Article 1:</strong> Najoua agrees to be Khalil's Valentine for the day (and hopefully longer).</span>
                         </li>
                         <li class="flex items-start">
                             <span class="mr-2 text-xl">🍫</span> 
@@ -141,7 +141,7 @@
                 </div>
 
                 <p class="text-center text-xl font-semibold italic text-gray-600 mt-8">
-                    "Ihsane, will you be my Valentine?"
+                    "Najoua, will you be my Valentine?"
                 </p>
             </div>
 
@@ -161,13 +161,13 @@
                 </div>
 
                 <div class="text-center relative">
-                    <!-- Ihsane's Signature Placeholder -->
-                    <div id="hanaeSignature" class="handwriting text-4xl text-pink-600 mb-2 transform -rotate-3 hidden pop-in">Ihsane</div>
+                    <!-- Najoua's Signature Placeholder -->
+                    <div id="hanaeSignature" class="handwriting text-4xl text-pink-600 mb-2 transform -rotate-3 hidden pop-in">Najoua</div>
                     <!-- Empty space before signing -->
                     <div id="signaturePlaceholder" class="h-10 mb-2 w-32"></div>
                     
                     <div class="border-t-2 border-gray-400 w-32 mx-auto"></div>
-                    <p class="text-xs text-gray-400 mt-1 uppercase">Signed by Ihsane</p>
+                    <p class="text-xs text-gray-400 mt-1 uppercase">Signed by Najoua</p>
                 </div>
             </div>
         </div>
@@ -216,8 +216,8 @@
             const lockScreen = document.getElementById('lockScreen');
             const contractScreen = document.getElementById('contractScreen');
             
-            // Updated name check to Ihsane
-            if (input.value.trim().toLowerCase() === 'ihsane') {
+            // Updated name check to Najoua
+            if (input.value.trim().toLowerCase() === 'najoua') {
                 lockScreen.style.transform = 'scale(0.9) opacity(0)';
                 setTimeout(() => {
                     lockScreen.classList.add('hidden');
@@ -283,10 +283,10 @@
             // Celebration
             confettiEffect();
 
-            // Email Notification (Agree) - Updated for Ihsane
+            // Email Notification (Agree) - Updated for Najoua
             setTimeout(() => {
                 const subject = encodeURIComponent("I said YES to being your Valentine! 💘");
-                const body = encodeURIComponent("Hey Khalil,\n\nI signed! I'll be your Valentine.\n\nLove,\nIhsane");
+                const body = encodeURIComponent("Hey Khalil,\n\nI signed! I'll be your Valentine.\n\nLove,\nNajoua");
                 window.location.href = `mailto:${YOUR_EMAIL}?subject=${subject}&body=${body}`;
             }, 1500);
         }
@@ -317,10 +317,10 @@
                 startRain(); // Trigger rain animation
             }, 500);
 
-            // Email Notification (Disagree) - Updated for Ihsane
+            // Email Notification (Disagree) - Updated for Najoua
             setTimeout(() => {
                 const subject = encodeURIComponent("Regarding Valentine's... 💔");
-                const body = encodeURIComponent("Hey Khalil,\n\nI saw the request. I have to pass on being your Valentine this time.\n\nBest,\nIhsane");
+                const body = encodeURIComponent("Hey Khalil,\n\nI saw the request. I have to pass on being your Valentine this time.\n\nBest,\nNajoua");
                 window.location.href = `mailto:${YOUR_EMAIL}?subject=${subject}&body=${body}`;
             }, 2000);
         }
